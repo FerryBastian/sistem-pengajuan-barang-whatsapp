@@ -6,17 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::table('submissions', function (Blueprint $table) {
-            $table->string('lokasi')->nullable()->change();
+        Schema::create('submissions', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::table('submissions', function (Blueprint $table) {
-            $table->string('lokasi')->nullable(false)->change();
-        });
+        Schema::dropIfExists('submissions');
     }
 };
