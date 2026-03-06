@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\SubmissionController;
 use App\Models\Submission;
+use App\Models\User;
 
 Route::prefix('v1')->name('v1.')->group(function () {
 
@@ -48,9 +49,22 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
         // ADMIN ROUTES
         Route::middleware('role:admin')->group(function () {
-            Route::get('/admin/dashboard', fn () => response()->json([
-                'message' => 'Welcome Admin',
-            ]))->name('admin.dashboard');
+
+            Route::get('/admin/dashboard', function (Request $request) {
+                $admin = $request->user();
+
+                return response()->json([
+                    'message' => 'Welcome Admin',
+                    'admin'   => $admin,
+                    'stats'   => [
+                        'total_users'       => User::where('role', 'user')->count(),
+                        'total_submissions' => Submission::count(),
+                        'pending_count'     => Submission::where('status', 'pending')->count(),
+                        'approved_count'    => Submission::where('status', 'approved')->count(),
+                        'rejected_count'    => Submission::where('status', 'rejected')->count(),
+                    ],
+                ]);
+            })->name('admin.dashboard');
 
             Route::get('/admin/submissions', function () {
                 return response()->json(
