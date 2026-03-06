@@ -1,0 +1,14 @@
+# Laravel
+backend/vendor/
+backend/.env
+
+# React
+frontend/node_modules/
+frontend/.env
+
+# Go
+go-whatsapp-web-multidevice/.env
+
+# Umum
+*.log
+.DS_Store
