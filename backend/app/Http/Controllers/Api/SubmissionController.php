@@ -3,38 +3,80 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Submission\StoreSubmissionRequest;
 use App\Models\Submission;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class SubmissionController extends Controller
 {
-    public function store(StoreSubmissionRequest $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
+        $request->validate([
+            'workshop_id'      => 'nullable|exists:workshops,id',
+            'division_id'      => 'nullable|exists:divisions,id',
+            'title'            => 'required|string|max:255',
+            'quantity'         => 'nullable|integer|min:1',
+            'unit'             => 'nullable|string|max:50',
+            'spesifikasi'      => 'nullable|string',
+            'kegunaan'         => 'required|string',
+            'content'          => 'nullable|string',
+            'urgency'          => 'required|in:standart,urgent,emergency',
+            'pic'              => 'required|string|max:255',
+            'nomor_telepon'    => 'nullable|string|max:20',
+            'referensi_link'   => 'nullable|url',
+            'referensi_gambar' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:10240',
+        ]);
+
         $user = $request->user();
 
         $submission = DB::transaction(function () use ($user, $request) {
-            return Submission::create([
-                'user_id'    => $user->id,
-                'title'      => $request->string('title'),
-                'content'    => $request->string('content'),
-                'department' => $request->string('department') ?: null,
-                'quantity'   => $request->integer('quantity'),
-                'unit'       => $request->string('unit') ?: 'pcs',
-                'urgency'    => $request->string('urgency') ?: 'normal',
-                'status'     => 'pending',
-            ]);
+            $data = [
+                'user_id'      => $user->id,
+                'workshop_id'  => $request->input('workshop_id'),
+                'division_id'  => $request->input('division_id'),
+                'title'        => $request->string('title'),
+                'quantity'     => $request->integer('quantity'),
+                'unit'         => $request->string('unit') ?: 'pcs',
+                'spesifikasi'  => $request->string('spesifikasi') ?: null,
+                'kegunaan'     => $request->string('kegunaan'),
+                'content'      => $request->string('content') ?: null,
+                'urgency'      => $request->string('urgency') ?: 'standart',
+                'pic'          => $request->string('pic'),
+                'nomor_telepon'=> $request->string('nomor_telepon') ?: null,
+                'referensi_link' => $request->string('referensi_link') ?: null,
+                'status'       => 'pending',
+            ];
+
+            // Handle file upload
+            if ($request->hasFile('referensi_gambar')) {
+                $path = $request->file('referensi_gambar')->store('referensi', 'public');
+                $data['referensi_gambar'] = $path;
+            }
+
+            return Submission::create($data);
         });
 
-        $this->sendWhatsAppNotification($submission, $user);
+        $this->sendWhatsAppNotification($submission->load(['workshop', 'division']), $user);
 
         return response()->json([
             'message' => 'Submission created',
-            'data'    => $submission->load('user:id,name,email'),
+            'data'    => $submission->load(['user:id,name,email', 'workshop', 'division']),
         ], 201);
+    }
+
+    public function mySubmissions(Request $request): JsonResponse
+    {
+        return response()->json(
+            $request->user()
+                ->submissions()
+                ->with(['workshop', 'division'])
+                ->latest()
+                ->get()
+        );
     }
 
     private function sendWhatsAppNotification(Submission $submission, $user): void
@@ -51,20 +93,26 @@ class SubmissionController extends Controller
         }
 
         $urgencyLabel = [
-            'normal' => '🟢 Normal',
-            'high'   => '🟠 Tinggi',
-            'urgent' => '🔴 Urgent',
+            'standart'  => '🟢 Standart',
+            'urgent'    => '🟠 Urgent',
+            'emergency' => '🔴 Emergency',
         ];
 
         $message =
             "*📦 PENGAJUAN BARANG BARU*\n\n" .
             "*Pengaju:* {$user->name}\n" .
             "*Email:* {$user->email}\n" .
-            "*Departemen:* " . ($submission->department ?: '-') . "\n" .
+            "*No. Telp:* " . ($submission->nomor_telepon ?: '-') . "\n" .
+            "*Workshop:* " . ($submission->workshop->name ?? '-') . "\n" .
+            "*Divisi:* " . ($submission->division->name ?? '-') . "\n" .
             "*Nama Barang:* {$submission->title}\n" .
             "*Jumlah:* {$submission->quantity} {$submission->unit}\n" .
-            "*Urgensi:* " . ($urgencyLabel[(string) $submission->urgency] ?? '🟢 Normal') . "\n" .
-            "*Keterangan:* {$submission->content}\n\n" .
+            "*Urgensi:* " . ($urgencyLabel[(string) $submission->urgency] ?? '🟢 Standart') . "\n" .
+            "*PIC:* " . ($submission->pic ?: '-') . "\n" .
+            "*Kegunaan:* {$submission->kegunaan}\n" .
+            "*Spesifikasi:* " . ($submission->spesifikasi ?: '-') . "\n" .
+            "*Keterangan:* " . ($submission->content ?: '-') . "\n\n" .
+            "*Referensi:* https://tokopedia.com/...\n" .
             "*Tanggal:* " . now()->locale('id')->isoFormat('D MMMM YYYY, HH:mm') . "\n" .
             "*ID Pengajuan:* #{$submission->id}";
 

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Submission extends Model
 {
@@ -11,12 +11,19 @@ class Submission extends Model
 
     protected $fillable = [
         'user_id',
+        'workshop_id',
+        'division_id',
         'title',
-        'content',
-        'department',
         'quantity',
         'unit',
+        'spesifikasi',
+        'kegunaan',
+        'content',
         'urgency',
+        'pic',
+        'nomor_telepon',
+        'referensi_link',
+        'referensi_gambar',
         'status',
     ];
 
@@ -27,5 +34,15 @@ class Submission extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function workshop()
+    {
+        return $this->belongsTo(Workshop::class)->withTrashed();
+    }
+
+    public function division()
+    {
+        return $this->belongsTo(Division::class)->withTrashed();
     }
 }
