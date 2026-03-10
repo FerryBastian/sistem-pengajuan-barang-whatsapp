@@ -309,19 +309,36 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-2 gap-4">
                 {[
                   { label: "Pengaju",     value: selectedItem.user?.name },
-                  { label: "Email",       value: selectedItem.user?.email },
-                  { label: "No. Telepon", value: selectedItem.nomor_telepon || "-" },
+                  { label: "Email",       value: selectedItem.user?.email, isEmail: true },
+                  { label: "No. Telepon", value: selectedItem.nomor_telepon || "-", isPhone: true },
                   { label: "PIC",         value: selectedItem.pic || "-" },
                   { label: "Workshop",    value: selectedItem.workshop?.name || "-" },
                   { label: "Divisi",      value: selectedItem.division?.name || "-" },
                   { label: "Nama Barang", value: selectedItem.title },
                   { label: "Jumlah",      value: `${selectedItem.quantity} ${selectedItem.unit}` },
-                ].map(({ label, value }) => (
-                  <div key={label} className="bg-gray-50 rounded-xl p-3">
-                    <p className="text-xs text-gray-400 font-medium mb-1">{label}</p>
-                    <p className="text-sm text-gray-800 font-semibold">{value}</p>
-                  </div>
-                ))}
+                ].map(({ label, value, isPhone, isEmail }) => {
+                  const waNumber = isPhone && value !== "-"
+                    ? value.replace(/^0/, "62").replace(/[^0-9]/g, "")
+                    : null;
+                  return (
+                    <div key={label} className="bg-gray-50 rounded-xl p-3">
+                      <p className="text-xs text-gray-400 font-medium mb-1">{label}</p>
+                      {waNumber ? (
+                        <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noreferrer"
+                          className="text-sm font-semibold text-green-600 hover:text-green-700 hover:underline flex items-center gap-1">
+                          <span>💬</span> {value}
+                        </a>
+                      ) : isEmail && value ? (
+                        <a href={`https://mail.google.com/mail/?view=cm&to=${value}`} target="_blank" rel="noreferrer"
+                          className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 hover:underline flex items-center gap-1">
+                          <span>✉️</span> {value}
+                        </a>
+                      ) : (
+                        <p className="text-sm text-gray-800 font-semibold">{value}</p>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
               {selectedItem.kegunaan && (
                 <div className="bg-gray-50 rounded-xl p-3">
