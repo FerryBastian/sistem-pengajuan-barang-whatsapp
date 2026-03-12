@@ -17,10 +17,8 @@ function Register() {
       setError("Password dan konfirmasi password tidak cocok.");
       return;
     }
-
     setLoading(true);
     setError("");
-
     try {
       const user = await register(name, email, password, passwordConfirmation);
       navigate(user.role === "admin" ? "/admin" : "/user", { replace: true });
@@ -42,18 +40,21 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4 sm:p-6 lg:p-8">
-      <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md transform transition-all hover:scale-[1.02]">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8"
+      style={{ background: "#EBF6FA" }}>
+
+      <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md transform transition-all hover:scale-[1.02]">
 
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
+            style={{ background: "#0096C7", boxShadow: "0 6px 20px rgba(0,150,199,0.35)" }}>
             <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Buat Akun</h1>
-          <p className="text-gray-500">Daftarkan diri untuk mulai mengajukan barang</p>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "#0D3040" }}>Buat Akun</h1>
+          <p style={{ color: "#5a8a9f", fontSize: 14 }}>Daftarkan diri untuk mulai mengajukan barang</p>
         </div>
 
         {/* Error */}
@@ -70,70 +71,83 @@ function Register() {
 
         {/* Form */}
         <div className="space-y-5">
+
           {/* Nama */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap</label>
+            <label className="block text-sm font-semibold mb-2" style={{ color: "#0D3040" }}>Nama Lengkap</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#0096C7">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
               <input
                 type="text" placeholder="Nama lengkap kamu"
                 value={name} onChange={(e) => setName(e.target.value)} onKeyDown={handleKeyDown}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 outline-none text-gray-700 placeholder-gray-400"
+                className="w-full pl-10 pr-4 py-3 rounded-xl outline-none transition-all duration-200 text-gray-700 placeholder-gray-400"
+                style={{ border: "1.5px solid #cce6f0", background: "#f5fbfd" }}
+                onFocus={e => e.target.style.borderColor = "#0096C7"}
+                onBlur={e => e.target.style.borderColor = "#cce6f0"}
               />
             </div>
           </div>
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+            <label className="block text-sm font-semibold mb-2" style={{ color: "#0D3040" }}>Email Address</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#0096C7">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                 </svg>
               </div>
               <input
                 type="email" placeholder="you@example.com"
                 value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleKeyDown}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 outline-none text-gray-700 placeholder-gray-400"
+                className="w-full pl-10 pr-4 py-3 rounded-xl outline-none transition-all duration-200 text-gray-700 placeholder-gray-400"
+                style={{ border: "1.5px solid #cce6f0", background: "#f5fbfd" }}
+                onFocus={e => e.target.style.borderColor = "#0096C7"}
+                onBlur={e => e.target.style.borderColor = "#cce6f0"}
               />
             </div>
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+            <label className="block text-sm font-semibold mb-2" style={{ color: "#0D3040" }}>Password</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#0096C7">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
               <input
                 type="password" placeholder="Minimal 8 karakter"
                 value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={handleKeyDown}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 outline-none text-gray-700 placeholder-gray-400"
+                className="w-full pl-10 pr-4 py-3 rounded-xl outline-none transition-all duration-200 text-gray-700 placeholder-gray-400"
+                style={{ border: "1.5px solid #cce6f0", background: "#f5fbfd" }}
+                onFocus={e => e.target.style.borderColor = "#0096C7"}
+                onBlur={e => e.target.style.borderColor = "#cce6f0"}
               />
             </div>
           </div>
 
           {/* Konfirmasi Password */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Konfirmasi Password</label>
+            <label className="block text-sm font-semibold mb-2" style={{ color: "#0D3040" }}>Konfirmasi Password</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#0096C7">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
               <input
                 type="password" placeholder="Ulangi password"
                 value={passwordConfirmation} onChange={(e) => setPasswordConfirmation(e.target.value)} onKeyDown={handleKeyDown}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 outline-none text-gray-700 placeholder-gray-400"
+                className="w-full pl-10 pr-4 py-3 rounded-xl outline-none transition-all duration-200 text-gray-700 placeholder-gray-400"
+                style={{ border: "1.5px solid #cce6f0", background: "#f5fbfd" }}
+                onFocus={e => e.target.style.borderColor = "#0096C7"}
+                onBlur={e => e.target.style.borderColor = "#cce6f0"}
               />
             </div>
           </div>
@@ -142,7 +156,12 @@ function Register() {
           <button
             onClick={handleRegister}
             disabled={loading || !name || !email || !password || !passwordConfirmation}
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-400 text-white font-semibold py-3 px-6 rounded-xl transform transition-all duration-200 hover:shadow-lg hover:shadow-indigo-500/30 disabled:hover:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full text-white py-3 px-6 rounded-xl transition-all duration-200 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            style={{
+              background: loading || !name || !email || !password || !passwordConfirmation ? "#b0d4e3" : "#0096C7",
+              boxShadow: loading || !name || !email || !password || !passwordConfirmation ? "none" : "0 4px 16px rgba(0,150,199,0.4)",
+              fontFamily: "'Barlow Condensed', sans-serif", fontSize: 16, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase",
+            }}
           >
             {loading ? (
               <>
@@ -162,7 +181,7 @@ function Register() {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-500">
             Sudah punya akun?{" "}
-            <Link to="/login" className="text-indigo-600 font-semibold hover:underline">
+            <Link to="/login" className="font-semibold hover:underline" style={{ color: "#0096C7" }}>
               Login di sini
             </Link>
           </p>

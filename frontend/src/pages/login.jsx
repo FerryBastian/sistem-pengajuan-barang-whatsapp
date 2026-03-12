@@ -83,17 +83,20 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4 sm:p-6 lg:p-8">
-      <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md transform transition-all hover:scale-[1.02]">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8"
+      style={{ background: "#EBF6FA" }}>
+
+      <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-md transform transition-all hover:scale-[1.02]">
 
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4"
+            style={{ background: "#0096C7", boxShadow: "0 6px 20px rgba(0,150,199,0.35)" }}>
             <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h1>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "#0D3040" }}>Welcome Back</h1>
           <p className="text-gray-500">Sign in to your account</p>
         </div>
 
@@ -127,33 +130,39 @@ function Login() {
         {/* Form */}
         <div className="space-y-5">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+            <label className="block text-sm font-semibold mb-2" style={{ color: "#0D3040" }}>Email Address</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#0096C7">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                 </svg>
               </div>
               <input
                 type="email" placeholder="you@example.com"
                 value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={handleKeyDown}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 outline-none text-gray-700 placeholder-gray-400"
+                className="w-full pl-10 pr-4 py-3 rounded-xl outline-none transition-all duration-200 text-gray-700 placeholder-gray-400"
+                style={{ border: "1.5px solid #cce6f0", background: "#f5fbfd" }}
+                onFocus={e => e.target.style.borderColor = "#0096C7"}
+                onBlur={e => e.target.style.borderColor = "#cce6f0"}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+            <label className="block text-sm font-semibold mb-2" style={{ color: "#0D3040" }}>Password</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="#0096C7">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
               <input
                 type="password" placeholder="••••••••"
                 value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={handleKeyDown}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 outline-none text-gray-700 placeholder-gray-400"
+                className="w-full pl-10 pr-4 py-3 rounded-xl outline-none transition-all duration-200 text-gray-700 placeholder-gray-400"
+                style={{ border: "1.5px solid #cce6f0", background: "#f5fbfd" }}
+                onFocus={e => e.target.style.borderColor = "#0096C7"}
+                onBlur={e => e.target.style.borderColor = "#cce6f0"}
               />
             </div>
           </div>
@@ -161,7 +170,11 @@ function Login() {
           <button
             onClick={handleLogin}
             disabled={loading || !email || !password}
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-400 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-indigo-500/30 disabled:hover:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            style={{
+              background: loading || !email || !password ? "#b0d4e3" : "#0096C7",
+              boxShadow: loading || !email || !password ? "none" : "0 4px 16px rgba(0,150,199,0.4)",
+            }}
           >
             {loading ? (
               <>
@@ -186,7 +199,7 @@ function Login() {
         <div className="mt-6 text-center space-y-2">
           <p className="text-sm text-gray-500">
             Belum punya akun?{" "}
-            <Link to="/register" className="text-indigo-600 font-semibold hover:underline">
+            <Link to="/register" className="font-semibold hover:underline" style={{ color: "#0096C7" }}>
               Daftar di sini
             </Link>
           </p>
