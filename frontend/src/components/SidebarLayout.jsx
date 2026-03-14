@@ -23,6 +23,7 @@ export default function SidebarLayout({ children }) {
   ];
 
   const navItems = user?.role === "admin" ? adminNav : userNav;
+  const dashboardPath = user?.role === "admin" ? "/admin" : "/user";
   const isActive = (path) => location.pathname === path;
 
   const handleLogout = () => { setShowLogoutModal(false); logout(); };
@@ -41,7 +42,7 @@ export default function SidebarLayout({ children }) {
         minHeight: 72,
       }}>
         {(!collapsed || mobile) && (
-          <Link to="/" style={{ textDecoration: "none" }}>
+          <Link to={dashboardPath} style={{ textDecoration: "none" }}>
             <img src="/dtech-logo.png" alt="Dtech" style={{ height: 32, objectFit: "contain" }} />
           </Link>
         )}
