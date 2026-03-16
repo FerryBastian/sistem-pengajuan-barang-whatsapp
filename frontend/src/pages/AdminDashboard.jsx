@@ -22,37 +22,14 @@ export default function AdminDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  const stats = dashboardData?.stats;
-
-  const trendData = [
-    { label: "8 Mar", value: 0 },
-    { label: "9 Mar", value: 1 },
-    { label: "10 Mar", value: 0 },
-    { label: "11 Mar", value: 2 },
-    { label: "12 Mar", value: 2 },
-    { label: "13 Mar", value: 0 },
-    { label: "14 Mar", value: 0 },
-  ];
+  const stats   = dashboardData?.stats;
+  const trend   = dashboardData?.trend   || [];
+  const monthly = dashboardData?.monthly || [];
 
   const statusData = [
     { name: "Pending",  value: stats?.pending_count  || 0, color: "#F59E0B" },
     { name: "Approved", value: stats?.approved_count || 0, color: "#22C55E" },
     { name: "Rejected", value: stats?.rejected_count || 0, color: "#EF4444" },
-  ];
-
-  const monthlyData = [
-    { label: "Jan", value: 1 },
-    { label: "Feb", value: 3 },
-    { label: "Mar", value: 2 },
-    { label: "Apr", value: 0 },
-    { label: "Mei", value: 0 },
-    { label: "Jun", value: 0 },
-    { label: "Jul", value: 0 },
-    { label: "Agu", value: 0 },
-    { label: "Sep", value: 0 },
-    { label: "Okt", value: 0 },
-    { label: "Nov", value: 0 },
-    { label: "Des", value: 0 },
   ];
 
   const statCards = [
@@ -121,7 +98,7 @@ export default function AdminDashboard() {
             <div style={{ background: "#fff", padding: 24, borderRadius: 16, border: "1px solid #cce6f0", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
               <h3 style={{ margin: "0 0 16px", fontSize: 15, fontWeight: 700, color: "#0D3040" }}>📈 Trend Pengajuan 7 Hari Terakhir</h3>
               <ResponsiveContainer width="100%" height={240}>
-                <LineChart data={trendData}>
+                <LineChart data={trend}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f9ff" />
                   <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9CA3AF" }} axisLine={false} tickLine={false} />
                   <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: "#9CA3AF" }} axisLine={false} tickLine={false} />
@@ -150,9 +127,9 @@ export default function AdminDashboard() {
 
           {/* Bar Chart */}
           <div className="fade-in" style={{ background: "#fff", padding: 24, borderRadius: 16, border: "1px solid #cce6f0", boxShadow: "0 2px 12px rgba(0,0,0,0.04)", marginBottom: 24 }}>
-            <h3 style={{ margin: "0 0 16px", fontSize: 15, fontWeight: 700, color: "#0D3040" }}>📊 Pengajuan per Bulan</h3>
+            <h3 style={{ margin: "0 0 16px", fontSize: 15, fontWeight: 700, color: "#0D3040" }}>📊 Pengajuan per Bulan ({new Date().getFullYear()})</h3>
             <ResponsiveContainer width="100%" height={260}>
-              <BarChart data={monthlyData}>
+              <BarChart data={monthly}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f9ff" />
                 <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#9CA3AF" }} axisLine={false} tickLine={false} />
                 <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: "#9CA3AF" }} axisLine={false} tickLine={false} />

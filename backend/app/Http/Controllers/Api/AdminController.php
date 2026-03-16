@@ -8,19 +8,51 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
     public function dashboard(): JsonResponse
     {
+        // Stats
+        $stats = [
+            'total_users'       => User::where('role', 'user')->count(),
+            'total_submissions' => Submission::count(),
+            'pending_count'     => Submission::where('status', 'pending')->count(),
+            'approved_count'    => Submission::where('status', 'approved')->count(),
+            'rejected_count'    => Submission::where('status', 'rejected')->count(),
+        ];
+
+        // Trend 7 hari terakhir
+        $trend = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date  = Carbon::today()->subDays($i);
+            $count = Submission::whereDate('created_at', $date)->count();
+            $trend[] = [
+                'label' => $date->translatedFormat('d M'),
+                'value' => $count,
+            ];
+        }
+
+        // Pengajuan per bulan tahun ini
+        $year    = Carbon::now()->year;
+        $monthly = [];
+        $monthNames = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+        for ($m = 1; $m <= 12; $m++) {
+            $count = Submission::whereYear('created_at', $year)
+                ->whereMonth('created_at', $m)
+                ->count();
+            $monthly[] = [
+                'label' => $monthNames[$m - 1],
+                'value' => $count,
+            ];
+        }
+
         return response()->json([
-            'stats' => [
-                'total_users'       => User::where('role', 'user')->count(),
-                'total_submissions' => Submission::count(),
-                'pending_count'     => Submission::where('status', 'pending')->count(),
-                'approved_count'    => Submission::where('status', 'approved')->count(),
-                'rejected_count'    => Submission::where('status', 'rejected')->count(),
-            ],
+            'stats'   => $stats,
+            'trend'   => $trend,
+            'monthly' => $monthly,
         ]);
     }
 
